@@ -54,7 +54,7 @@ namespace FolderSearch.Models
 		{
 			string[] terms = query.Split(' ').Select(s => s.Trim()).ToArray();
 
-
+			throw new NotImplementedException();
 		}
 	}
 }
