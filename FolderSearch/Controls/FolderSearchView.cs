@@ -19,7 +19,7 @@ namespace FolderSearch.Controls
 
 		public async Task LoadAsync(string path)
 		{
-			FolderTree tree = await FolderTree.FromPathAsync(path);
+			FolderTree tree = await FolderTree.FromPath(path);
 			_folderTrees.Add(tree);
 			FillTreeView(tree);
 		}

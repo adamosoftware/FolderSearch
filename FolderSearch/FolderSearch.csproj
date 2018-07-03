@@ -60,6 +60,9 @@
     <Compile Include="Controls\FolderSearchView.Designer.cs">
       <DependentUpon>FolderSearchView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Interfaces\IPath.cs" />
+    <Compile Include="Interfaces\IHierarchy.cs" />
     <Compile Include="Models\FolderTree.cs" />
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>

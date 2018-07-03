@@ -1,0 +1,7 @@
+﻿namespace FolderSearch.Interfaces
+{
+	public interface IPath
+	{
+		string Path { get; }		
+	}
+}
