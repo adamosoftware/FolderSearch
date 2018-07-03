@@ -4,7 +4,7 @@ namespace FolderSearch.Interfaces
 {
 	public interface IHierarchy
 	{
-		string Name { get; }
+		string Name { get; set; }
 		IEnumerable<IHierarchy> Children { get; set; }
 	}
 }
