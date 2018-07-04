@@ -9,23 +9,13 @@ namespace FolderSearch.Extensions
 	{
 		public static T ToHierarchy<T>(this IEnumerable<string> items, char separator) where T : INode, new()
 		{
-			T result = new T();
-
-			Console.WriteLine("hello");
-
-			var children = GetChildren<T>(result, items, separator);
-			result.Children = children;
-
-			//throw new NotImplementedException();
-
+			T result = new T();			
+			result.Children = GetChildren<T>(result, items, separator);
 			return result;
 		}
 
 		private static IEnumerable<INode> GetChildren<T>(INode parent, IEnumerable<string> items, char separator) where T : INode, new()
 		{
-			Console.WriteLine("I'm not called...");
-			//throw new NotImplementedException();
-
 			var parsed = GetFolders(items, separator);
 
 			var folders = parsed
@@ -40,7 +30,7 @@ namespace FolderSearch.Extensions
 					return node;
 				}).ToArray();
 
-			foreach (INode item in folders) yield return item;
+			foreach (INode item in folders) yield return item; // this is causing issue
 		}
 
 		public static ILookup<string, string> GetFolders(IEnumerable<string> items, char separator)
