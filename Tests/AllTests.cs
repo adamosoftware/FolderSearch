@@ -11,10 +11,9 @@ namespace Tests
 	[TestClass]
 	public class AllTests
 	{
-		[TestMethod]
-		public void FilenamesToHierarchy()
+		private static string[] GetFilenames()
 		{
-			string[] fileNames = new string[]
+			return new string[]
 			{
 				@"this\that\hello.txt",
 				@"this\yellow\whatever.txt",
@@ -22,8 +21,12 @@ namespace Tests
 				@"that\brown\thing.txt",
 				@"that\brown\crescent.txt"
 			};
+		}
 
-			var result = EnumerableExtensions.ToHierarchy<FolderNode>(fileNames, '\\');
+		[TestMethod]
+		public void FilenamesToHierarchy()
+		{
+			var result = EnumerableExtensions.ToHierarchy<FolderNode>(GetFilenames(), '\\');
 
 			StringBuilder printed = new StringBuilder();
 			PrintResult(result, printed, 0);
@@ -40,6 +43,24 @@ namespace Tests
     brown
       thing.txt
       crescent.txt
+"));
+		}
+
+		[TestMethod]
+		public void FilenamesToFolderTree()
+		{
+			var result = EnumerableExtensions.ToHierarchy<FolderNode>(GetFilenames(), '\\', includeLeaves: false);
+
+			StringBuilder printed = new StringBuilder();
+			PrintResult(result, printed, 0);
+
+			Assert.IsTrue(printed.ToString().Equals(
+@"
+  this
+    that
+    yellow
+  that
+    brown
 "));
 		}
 
