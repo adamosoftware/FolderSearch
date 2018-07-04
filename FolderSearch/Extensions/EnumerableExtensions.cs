@@ -1,5 +1,4 @@
 ﻿using FolderSearch.Interfaces;
-using FolderSearch.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,31 +11,39 @@ namespace FolderSearch.Extensions
 		{
 			T result = new T();
 			result.Children = GetChildren<T>(result, items, separator);
+
+			//throw new NotImplementedException();
+
 			return result;
 		}
 
 		private static IEnumerable<INode> GetChildren<T>(INode parent, IEnumerable<string> items, char separator) where T : INode, new()
-		{			
-			var folders = ParseDirectChildren(items, separator, parts => parts.Length >= 2)
+		{
+			Console.WriteLine("I'm not called...");
+			throw new NotImplementedException();
+
+			var parsed = GetFolders(items, separator);
+
+			var folders = parsed
 				.Select(dir =>
 				{
 					T node = new T()
 					{
 						Parent = parent,
-						Name = dir.Key						
+						Name = dir.Key
 					};
 					node.Children = GetChildren<T>(node, dir, separator);
 					return node;
 				}).ToArray();
 
-			foreach (INode item in folders) yield return item;		
+			foreach (INode item in folders) yield return item;
 		}
 
-		public static ILookup<string, string> ParseDirectChildren(IEnumerable<string> items, char separator, Func<string[], bool> predicate) 
+		public static ILookup<string, string> GetFolders(IEnumerable<string> items, char separator)
 		{
 			return items
 				.Select(item => item.Split(new char[] { separator }, 2))
-				.Where(parts => predicate.Invoke(parts))
+				.Where(parts => parts.Length >= 2)
 				.ToLookup(parts => parts[0], parts => parts[1]);
 		}
 	}
