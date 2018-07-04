@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Text;
 using FolderSearch.Extensions;
 using FolderSearch.Interfaces;
 using FolderSearch.Models;
@@ -24,19 +25,34 @@ namespace Tests
 
 			var result = EnumerableExtensions.ToHierarchy<FolderNode>(fileNames, '\\');
 
-			PrintOutput(result, 0);
+			StringBuilder printed = new StringBuilder();
+			PrintResult(result, printed, 0);
+
+			Assert.IsTrue(printed.ToString().Equals(
+@"
+  this
+    that
+      hello.txt
+    yellow
+      whatever.txt
+      crispin.txt
+  that
+    brown
+      thing.txt
+      crescent.txt
+"));
 		}
 
-		private void PrintOutput(FolderNode result, int depth)
+		private void PrintResult(FolderNode result, StringBuilder printed, int depth)
 		{
 			string indent = string.Empty;
-			for (int i = 0; i < depth; i++) indent += " ";
-			Debug.WriteLine(indent + result.Name);
+			for (int i = 0; i < depth; i++) indent += "  ";
+			printed.AppendLine(indent + result.Name);
 			depth++;
 			if (result.Children != null)
 			{
-				foreach (FolderNode child in result.Children) PrintOutput(child, depth);
-			}			
+				foreach (FolderNode child in result.Children) PrintResult(child, printed, depth);
+			}
 			depth--;
 		}
 	}

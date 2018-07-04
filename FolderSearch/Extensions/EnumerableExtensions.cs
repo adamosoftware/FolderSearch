@@ -15,10 +15,8 @@ namespace FolderSearch.Extensions
 		}
 
 		private static IEnumerable<INode> GetChildren<T>(INode parent, IEnumerable<string> items, char separator) where T : INode, new()
-		{
-			var parsed = GetFolders(items, separator);
-
-			var folders = parsed
+		{			
+			var children = GetImmediateChildren(items, separator)
 				.Select(dir =>
 				{
 					T node = new T()
@@ -26,19 +24,30 @@ namespace FolderSearch.Extensions
 						Parent = parent,
 						Name = dir.Key
 					};
-					node.Children = GetChildren<T>(node, dir, separator);
+						
+					if (IsFolder(dir))
+					{
+						node.Children = GetChildren<T>(node, dir, separator);
+					}					
+
 					return node;
 				}).ToArray();
 
-			foreach (INode item in folders) yield return item; // this is causing issue
+			return children as IEnumerable<INode>;
 		}
 
-		public static ILookup<string, string> GetFolders(IEnumerable<string> items, char separator)
+		private static bool IsFolder(IGrouping<string, string> dir)
+		{
+			return (!(dir.Key.Equals(dir.First()) && dir.Count() == 1));
+		}
+
+		private static ILookup<string, string> GetImmediateChildren(IEnumerable<string> items, char separator)
 		{
 			return items
 				.Select(item => item.Split(new char[] { separator }, 2))
-				.Where(parts => parts.Length >= 2)
-				.ToLookup(parts => parts[0], parts => parts[1]);
+				.ToLookup(
+					parts => parts[0], // next level down directory name (or file name if we're at the end of path)
+					parts => (parts.Length > 1) ? parts[1] : parts[0]); // anything after the directory name
 		}
 	}
 }
