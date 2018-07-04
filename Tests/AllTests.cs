@@ -33,7 +33,10 @@ namespace Tests
 			for (int i = 0; i < depth; i++) indent += " ";
 			Debug.WriteLine(indent + result.Name);
 			depth++;
-			foreach (FolderNode child in result.Children) PrintOutput(child, depth);
+			if (result.Children != null)
+			{
+				foreach (FolderNode child in result.Children) PrintOutput(child, depth);
+			}			
 			depth--;
 		}
 	}
