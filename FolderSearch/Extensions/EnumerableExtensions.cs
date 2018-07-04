@@ -10,7 +10,11 @@ namespace FolderSearch.Extensions
 		public static T ToHierarchy<T>(this IEnumerable<string> items, char separator) where T : INode, new()
 		{
 			T result = new T();
-			result.Children = GetChildren<T>(result, items, separator);
+
+			Console.WriteLine("hello");
+
+			var children = GetChildren<T>(result, items, separator);
+			result.Children = children;
 
 			//throw new NotImplementedException();
 
@@ -20,7 +24,7 @@ namespace FolderSearch.Extensions
 		private static IEnumerable<INode> GetChildren<T>(INode parent, IEnumerable<string> items, char separator) where T : INode, new()
 		{
 			Console.WriteLine("I'm not called...");
-			throw new NotImplementedException();
+			//throw new NotImplementedException();
 
 			var parsed = GetFolders(items, separator);
 
