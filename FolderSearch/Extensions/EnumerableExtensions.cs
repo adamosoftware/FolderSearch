@@ -8,29 +8,33 @@ namespace FolderSearch.Extensions
 {
 	public static class EnumerableExtensions
 	{
-		public static H ToHierarchy<H>(this IEnumerable<string> items, char separator) where H : IHierarchy, new()
+		public static T ToHierarchy<T>(this IEnumerable<string> items, char separator) where T : INode, new()
 		{
-			H result = new H();
-			result.Children = GetChildren<IHierarchy>(items, separator);
+			T result = new T();
+			result.Children = GetChildren<T>(result, items, separator);
 			return result;
 		}
 
-		private static IEnumerable<H> GetChildren<H>(IEnumerable<string> items, char separator) where H : IHierarchy, new()
+		private static IEnumerable<INode> GetChildren<T>(INode parent, IEnumerable<string> items, char separator) where T : INode, new()
 		{
 			var folders = GetFolders(items, separator);
 
-			return folders
-				.Select(dir => new H()
+			var result = folders
+				.Select(dir => new T()
 				{
+					Parent = parent,
 					Name = dir.Key,
-					Children = GetChildren<H>(dir, separator)
-				});
+					Children = GetChildren<T>(parent, dir, separator)
+				}).ToArray();			
+
+			return result as IEnumerable<INode>;
 		}
 
 		public static ILookup<string, string> GetFolders(IEnumerable<string> items, char separator) 
 		{
 			return items
 				.Select(item => item.Split(new char[] { separator }, 2))
+				.Where(parts => parts.Length >= 2)
 				.ToLookup(parts => parts[0], parts => parts[1]);
 		}
 	}

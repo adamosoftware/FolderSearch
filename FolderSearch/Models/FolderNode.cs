@@ -8,19 +8,20 @@ using System.Threading.Tasks;
 
 namespace FolderSearch.Models
 {
-	public class FolderTree : IHierarchy
-	{
+	public class FolderNode : INode
+	{		
+		public INode Parent { get; set; }
 		public string Name { get; set; }
-		public FolderTree[] Subfolders { get; set; }
+		public FolderNode[] Subfolders { get; set; }
 
-		public IEnumerable<IHierarchy> Children { get { return Subfolders; } set { Subfolders = value as FolderTree[]; } }
+		public IEnumerable<INode> Children { get { return Subfolders; } set { Subfolders = value as FolderNode[]; } }
 
 		[JsonIgnore]
 		public List<Folder> Paths { get; private set; } = new List<Folder>();
 
-		public async static Task<FolderTree> FromPath(string path)
+		public async static Task<FolderNode> FromPath(string path)
 		{
-			FolderTree root = new FolderTree() { Name = path };
+			FolderNode root = new FolderNode() { Name = path };
 			root.Paths.Add(new Folder(path));
 
 			await Task.Run(() =>
@@ -31,15 +32,15 @@ namespace FolderSearch.Models
 			return root;
 		}
 
-		private static FolderTree[] DrilldownSubfolders(FolderTree parent, string path, List<Folder> paths)
+		private static FolderNode[] DrilldownSubfolders(FolderNode parent, string path, List<Folder> paths)
 		{
 			string[] folders = TryGetDirectories(path);
 			paths.AddRange(folders.Select(dir => new Folder(dir)));
 
-			List<FolderTree> subfolders = new List<FolderTree>();
+			List<FolderNode> subfolders = new List<FolderNode>();
 			foreach (string folder in folders)
 			{
-				FolderTree child = new FolderTree() { Name = folder.Split('\\').Last() };
+				FolderNode child = new FolderNode() { Name = folder.Split('\\').Last() };
 				child.Subfolders = DrilldownSubfolders(child, folder, paths);				
 				subfolders.Add(child);
 			}
@@ -59,7 +60,7 @@ namespace FolderSearch.Models
 			}
 		}
 
-		public FolderTree Search(string query)
+		public FolderNode Search(string query)
 		{
 			string[] terms = query.Split(' ').Select(s => s.Trim()).ToArray();
 

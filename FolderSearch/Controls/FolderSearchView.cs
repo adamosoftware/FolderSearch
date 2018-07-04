@@ -10,7 +10,7 @@ namespace FolderSearch.Controls
 {
 	public partial class FolderSearchView : UserControl
 	{
-		private List<FolderTree> _folderTrees = new List<FolderTree>();
+		private List<FolderNode> _folderTrees = new List<FolderNode>();
 
 		public FolderSearchView()
 		{
@@ -19,12 +19,12 @@ namespace FolderSearch.Controls
 
 		public async Task LoadAsync(string path)
 		{
-			FolderTree tree = await FolderTree.FromPath(path);
+			FolderNode tree = await FolderNode.FromPath(path);
 			_folderTrees.Add(tree);
 			FillTreeView(tree);
 		}
 
-		private void FillTreeView(FolderTree tree)
+		private void FillTreeView(FolderNode tree)
 		{
 			try
 			{
@@ -38,9 +38,9 @@ namespace FolderSearch.Controls
 			}
 		}
 
-		private void FillTreeViewR(TreeNode parent, FolderTree tree)
+		private void FillTreeViewR(TreeNode parent, FolderNode tree)
 		{
-			foreach (FolderTree subfolder in tree.Subfolders)
+			foreach (FolderNode subfolder in tree.Subfolders)
 			{
 				TreeNode child = parent.Nodes.Add(subfolder.Name);
 				FillTreeViewR(child, subfolder);

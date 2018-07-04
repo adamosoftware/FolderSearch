@@ -2,9 +2,10 @@
 
 namespace FolderSearch.Interfaces
 {
-	public interface IHierarchy
+	public interface INode
 	{
+		INode Parent { get; set; }
 		string Name { get; set; }
-		IEnumerable<IHierarchy> Children { get; set; }
+		IEnumerable<INode> Children { get; set; }
 	}
 }

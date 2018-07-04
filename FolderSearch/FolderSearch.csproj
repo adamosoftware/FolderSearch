@@ -62,8 +62,8 @@
     </Compile>
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Interfaces\IPath.cs" />
-    <Compile Include="Interfaces\IHierarchy.cs" />
-    <Compile Include="Models\FolderTree.cs" />
+    <Compile Include="Interfaces\INode.cs" />
+    <Compile Include="Models\FolderNode.cs" />
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
